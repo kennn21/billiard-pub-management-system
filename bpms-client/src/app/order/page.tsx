@@ -8,13 +8,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useSearchParams } from 'next/navigation'
 
 //User Defined Imports
-  //Classes
+  //Services (Class)
     import Converters from '../../utils/Converters'
     import DataFetcher from '@/helper/DataFetcher'
     
   //Modules
     import { menu } from './menu';
-    import { Food, Order, Table, Receipt } from '../../interface/interface'
+    import { Food, Order, Table} from '../../interface/interface'
 
 
 export default function FoodMenu() {

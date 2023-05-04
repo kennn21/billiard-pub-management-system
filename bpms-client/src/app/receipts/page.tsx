@@ -1,12 +1,17 @@
 "use client"; // this is a client component 👈🏽
 
-import { Receipt} from '@/interface/interface'
+//Library Dependencies
 import { useEffect, useState } from 'react'
-import { config } from '../static/config'
 import { useRouter } from 'next/navigation'
 
-import Converters from '../../utils/Converters'
-import DataFetcher from '@/helper/DataFetcher'
+//User Defined Dependencies
+  //Modules
+    import { Receipt} from '@/interface/interface'
+    import { config } from '../static/config'
+
+  //Services (Class)
+    import Converters from '../../utils/Converters'
+    import DataFetcher from '@/helper/DataFetcher'
 
 
 

@@ -1,14 +1,17 @@
 "use client"; // this is a client component 👈🏽
 
-import DataFetcher from '@/helper/DataFetcher'
+//Library Imports
 
-import Converters from '../../../utils/Converters'
-
-import { Table, Receipt, Food } from '../../../interface/interface'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-
 import "bootstrap/dist/css/bootstrap.min.css" // Import bootstrap CSS
+
+//User Defined Dependencies
+  //Services (Class)
+    import DataFetcher from '@/helper/DataFetcher'
+    import Converters from '../../../utils/Converters'
+  //Modules
+    import { Table, Receipt, Food } from '../../../interface/interface'
 
 export default function ReceiptInfo(){
   const [receipt, setReceipt] = useState<Receipt>()
