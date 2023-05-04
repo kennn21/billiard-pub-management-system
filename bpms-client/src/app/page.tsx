@@ -9,8 +9,7 @@ import { useEffect, useState } from 'react'
 import { config } from './static/config'
 import { useRouter } from 'next/navigation'
 
-import "bootstrap/dist/css/bootstrap.min.css" // Import bootstrap CSS
-import './globals.css'
+import 'bootstrap/dist/css/bootstrap.css';
 
 export default function Home() {
   const [tables, SetTables] = useState<Table[]>([])
@@ -29,18 +28,27 @@ export default function Home() {
     fetchData()
   }, [])
   
-  function GoToTable({ table_id }: { table_id: string }) {
+  function GoToTableAsClient({ table_id }: { table_id: string }) {
     const handleClick = () => {
-      router.push('/table?id='+table_id)
+      router.push('/client/table?id='+table_id)
     }
     return (
-      <a href="#" className="btn btn-primary" onClick={handleClick}>Go To Table</a>
+      <a href="#" className="btn btn-primary" onClick={handleClick}>Client</a>
+    )
+  }
+
+  function GoToTableAsAdmin({ table_id }: { table_id: string }) {
+    const handleClick = () => {
+      router.push('/admin/table?id='+table_id)
+    }
+    return (
+      <a href="#" className="btn btn-primary" onClick={handleClick}>Admin</a>
     )
   }
 
   function GoToReceipts(){
     const handleClick = () => {
-      router.push('/receipts')
+      router.push('/admin/receipts')
     }
     return(
       <a href="#" className="btn btn-primary" onClick={handleClick}>Receipts Page</a>
@@ -57,7 +65,8 @@ export default function Home() {
           <div className="card-body">
             <h5 className="card-title">{table.name}</h5>
             <p className="card-text">Status: {Converters.convertStatus(table.status)}</p>
-            <GoToTable table_id={table.table_id} />
+            <GoToTableAsClient table_id={table.table_id} />
+            <GoToTableAsAdmin table_id={table.table_id} />
           </div>
         </div>
       ))}

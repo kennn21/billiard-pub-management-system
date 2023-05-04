@@ -2,17 +2,14 @@
 
 import DataFetcher from '@/helper/DataFetcher'
 
-import Converters from '../../utils/Converters'
+import Converters from '../../../utils/Converters'
 
-import { Table, Receipt, Food } from '../../interface/interface'
+import { Table, Receipt, Food } from '../../../interface/interface'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import "bootstrap/dist/css/bootstrap.min.css" // Import bootstrap CSS
-import '../globals.css'
 
-
-export default function TableInfo() {
+export default function TableBooking() {
   const [table, SetTable] = useState<Table>();
 
   const router = useRouter();
@@ -55,34 +52,39 @@ export default function TableInfo() {
         ...table,
         status: "1",
       });
+      navigateToPaymentPage()
     }
   };
 
   const navigateToOrderPage = () => {
-    router.push("/order?id=" + table_id);
+    router.push("/client/order?id=" + table_id)
   };
+
+  const navigateToPaymentPage = () => {
+    router.push("/client/payment?id=" + table_id)
+  }
 
   if (table) {
     return (
       <>
-        <h1>Table {table.name}</h1>
+        <h1>{table.name}</h1>
         <h3>Table Status: {Converters.convertStatus(table.status)}</h3>
         {table.status === "1" && (
-          <button className="btn-primary" onClick={orderTable}>
+          <button className="btn btn-primary" onClick={orderTable}>
             Order Table
           </button>
         )}
         {table.status === "0" && (
           <>
-            <button className="btn-primary" onClick={finishTable}>
-              Finish Table
+            <button className="btn btn-success" onClick={finishTable}>
+              Finish & Pay
             </button>
-            <button className="btn-primary" onClick={navigateToOrderPage}>
+            <button className="btn btn-primary" onClick={navigateToOrderPage}>
               Order Food
             </button>
           </>
         )}
-        <button className="btn-primary" onClick={navigateToMain}>
+        <button className="btn btn-primary" onClick={navigateToMain}>
           Back
         </button>
 

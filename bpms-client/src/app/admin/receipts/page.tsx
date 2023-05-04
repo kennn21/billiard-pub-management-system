@@ -7,10 +7,10 @@ import { useRouter } from 'next/navigation'
 //User Defined Dependencies
   //Modules
     import { Receipt} from '@/interface/interface'
-    import { config } from '../static/config'
+    import { config } from '../../static/config'
 
   //Services (Class)
-    import Converters from '../../utils/Converters'
+    import Converters from '../../../utils/Converters'
     import DataFetcher from '@/helper/DataFetcher'
 
 
@@ -36,7 +36,7 @@ export default function ReceiptsPage(){
   function GoToReceipt({ receipt_id }: { receipt_id: string }) {
     const router = useRouter()
     const handleClick = () => {
-      router.push('/receipts/receipt?id='+receipt_id)
+      router.push('/admin/receipts/receipt?id='+receipt_id)
     }
     return (
       <a href="#" className="btn btn-primary" onClick={handleClick}>Go To Receipt</a>

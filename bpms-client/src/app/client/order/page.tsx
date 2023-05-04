@@ -3,21 +3,19 @@
 //Library Imports
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import '../globals.css';
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useSearchParams } from 'next/navigation'
 
 //User Defined Imports
   //Services (Class)
-    import Converters from '../../utils/Converters'
+    import Converters from '../../../utils/Converters'
     import DataFetcher from '@/helper/DataFetcher'
     
   //Modules
-    import { menu } from './menu';
-    import { Food, Order, Table} from '../../interface/interface'
+    import { menu } from '@/app/static/menu';
+    import { Food, Order, Table} from '../../../interface/interface'
 
 
-export default function FoodMenu() {
+export default function OrderFood() {
   const [orders, setOrders] = useState<Order[]>([])
   const [table, setTable] = useState<Table>()
   const [totalPrice, setTotalPrice] = useState<number>(0)
@@ -112,7 +110,7 @@ const handleLoadOrder = (orderString: string) => {
 
 //region Navigations
 const navigateToTable = () => {
-  router.push('/table?id='+table_id)
+  router.push('/client/table?id='+table_id)
 };
 
 const handleSaveOrder = () => {

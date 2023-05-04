@@ -18,8 +18,8 @@
     transparent 360deg
   );
   --secondary-glow: radial-gradient(
-    rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0)
+    rgba(62, 62, 62, 0),
+    rgba(62, 62, 62, 0)
   );
 
   --tile-start-rgb: 239, 245, 249;
@@ -57,13 +57,7 @@
     --tile-start-rgb: 2, 13, 46;
     --tile-end-rgb: 2, 5, 19;
     --tile-border: conic-gradient(
-      #ffffff80,
-      #ffffff40,
-      #ffffff30,
-      #ffffff20,
-      #ffffff10,
-      #ffffff10,
-      #ffffff80
+      #ffffff10
     );
 
     --callout-rgb: 20, 20, 20;
