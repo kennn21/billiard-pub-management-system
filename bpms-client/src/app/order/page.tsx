@@ -23,10 +23,12 @@ export default function FoodMenu() {
   const [totalPrice, setTotalPrice] = useState<number>(0)
   const [receipt, setReceipt] = useState<any>()
 
+  //Gets Table ID From URL
   const searchParams = useSearchParams()
   const router = useRouter()
   const table_id = searchParams.get("id")!
 
+  //Gets Table Data From DB
   useEffect(() => {
     const fetchData = async () => {
       const dataFetcher = new DataFetcher("http://127.0.0.1:5000");
@@ -46,10 +48,12 @@ export default function FoodMenu() {
     fetchData()
   }, [table_id])
 
+  //Saves Order everytime the order changes
   useEffect(() => {
     handleSaveOrder()
   }, [orders])
 
+//region Order Item Management
   const handleAddToOrder = (food: Food, quantity: number) => {
     const existingOrder = orders.find((order) => order.food.id === food.id);
     if (existingOrder) {
@@ -75,7 +79,9 @@ export default function FoodMenu() {
       }
     }
   }
+//endregion
 
+//region Database Methods
   const saveOrder = async (totalPrice: number) => {
     if (receipt) {
       const orderString = orders.map((order) => `${order.food.id}/${order.quantity}`).join(',');
@@ -102,8 +108,9 @@ const handleLoadOrder = (orderString: string) => {
     });
   setOrders(newOrders);
 }
+//endregion
 
-//Navigations
+//region Navigations
 const navigateToTable = () => {
   router.push('/table?id='+table_id)
 };
@@ -115,7 +122,7 @@ const handleSaveOrder = () => {
   setTotalPrice(totalPrice)
   saveOrder(totalPrice)
 }
-
+//endregion
 
   return (
     <div>
