@@ -124,7 +124,7 @@ const handleSaveOrder = () => {
         {menu.map((food) => (
           <li key={food.id}>
             <span>{food.name}</span>
-            <span>${food.price.toFixed(2)}</span>
+            <span> | {Converters.convertPrice(food.price.toFixed(2))}</span>
             <button onClick={() => handleRemoveFromOrder(food, 1)}>-</button>
             <button onClick={() => handleAddToOrder(food, 1)}>+</button>
           </li>

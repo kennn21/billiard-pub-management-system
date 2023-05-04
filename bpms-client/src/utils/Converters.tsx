@@ -1,6 +1,6 @@
 export default class Converters {
     static convertStatus(status: string): string {
-      return status === "0" ? "unavailable" : "available"
+      return status === "0" ? "In Use" : "Available"
     }
 
     static convertOrderedFood(ordered_food:string): string {

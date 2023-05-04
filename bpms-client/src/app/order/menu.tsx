@@ -61,5 +61,11 @@ export const menu: Food[] = [
         info: 'Top G Egg',
         price: 2000
       },
+      {
+        id: 11,
+        name: '1 HOUR',
+        info: 'Book 1 more hour',
+        price: 70000
+      }
   ];
   
