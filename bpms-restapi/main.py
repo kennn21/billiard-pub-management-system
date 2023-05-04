@@ -37,7 +37,7 @@ def create_table():
         conn.close()
 
 
-@app.route("/tables")
+@app.route("/tables", methods=["GET"])
 def tables():
     try:
         conn = mysql.connect()
@@ -62,7 +62,7 @@ def table_details(table_id):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute(
-            "SELECT table_id, name, status, active_receipt_id FROM tables WHERE id =%s", table_id)
+            "SELECT table_id, name, status, active_receipt_id FROM tables WHERE table_id =%s", table_id)
         tableRow = cursor.fetchone()
         response = jsonify(tableRow)
         response.status_code = 200
@@ -75,23 +75,23 @@ def table_details(table_id):
         conn.close()
 
 
-@app.route('/update/table/<table_id>', methods=['PUT'])
-def update_table():
+@app.route('/update/tables/<table_id>', methods=['PUT'])
+def update_table(table_id):
     try:
         _json = request.json
-        _table_id = _json['table_id']
-        _name = _json['name']
-        _status = _json['status']
-        _active_receipt_id = _json['active_receipt_id']
-        if _table_id and _name and _status and _active_receipt_id and request.method == 'PUT':
-            sqlQuery = "UPDATE tables SET table_id=%s, name=%s, status=%s, active_receipt_id=%s WHERE table_id=%s"
+        _table_id = _json.get('table_id')
+        _name = _json.get('name')
+        _status = _json.get('status')
+        _active_receipt_id = _json.get('active_receipt_id')
+        if request.method == 'PUT' and any((_table_id, _name, _status, _active_receipt_id)):
+            sqlQuery = "UPDATE tables SET table_id = IFNULL(%s, table_id), name = IFNULL(%s, name), status = IFNULL(%s, status), active_receipt_id = IFNULL(%s, active_receipt_id) WHERE table_id=%s"
             bindData = (_table_id, _name, _status,
-                        _active_receipt_id, _table_id)
+                        _active_receipt_id, table_id)
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute(sqlQuery, bindData)
             conn.commit()
-            response = jsonify('Tables updated successfully!')
+            response = jsonify(f'Table {table_id} updated successfully!')
             response.status_code = 200
             return response
         else:
@@ -104,7 +104,7 @@ def update_table():
         conn.close()
 
 
-@app.route('/delete/table/<table_id>', methods=['DELETE'])
+@app.route('/delete/tables/<table_id>', methods=['DELETE'])
 def delete_table(table_id):
     try:
         conn = mysql.connect()
@@ -130,31 +130,30 @@ def create_receipt():
     conn = mysql.connect()
     cursor = conn.cursor()
     try:
-        _json = request.json
-        _receipt_id = _json['receipt_id']
-        _food_orders = _json['food_orders']
-        _total_price = _json['total_price']
-        _start_time = _json['start_time']
-        _end_time = _json['end_time']
+        _receipt_id = request.json.get('receipt_id')
+        _food_orders = request.json.get('food_orders')
+        _total_price = request.json.get('total_price')
+        _start_time = request.json.get('start_time')
+        _end_time = request.json.get('end_time')
+        _table_id = request.json.get('table_id')
         if _receipt_id and _food_orders and _total_price and _start_time and _end_time and request.method == 'POST':
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sqlQuery = '''INSERT INTO receipts(receipt_id, food_orders, total_price, start_time, end_time) VALUES (%s, %s, %s, %s, %s)'''
+            sqlQuery = '''INSERT INTO receipts(receipt_id, food_orders, total_price, start_time, end_time, table_id) VALUES (%s, %s, %s, %s, %s, %s)'''
             bindData = (_receipt_id, _food_orders,
-                        _total_price, _start_time, _end_time)
+                        _total_price, _start_time, _end_time, _table_id)
             cursor.execute(sqlQuery, bindData)
             conn.commit()
-            response = jsonify('Receipt added successfully')
+            cursor.close()
+            conn.close()
+            response = jsonify(f'Receipt {_receipt_id} added successfully')
             response.status_code = 200
             return response
         else:
             return showMessage()
     except Exception as e:
         print(e)
-        return jsonify('error')
-    finally:
-        cursor.close()
-        conn.close()
+        return jsonify({'error': str(e)})
 
 
 @app.route("/receipts")
@@ -162,8 +161,8 @@ def receipts():
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute(
-            "SELECT receipt_id, food_orders, total_price, start_time, end_time FROM receipts")
+        sqlQuery = '''SELECT receipt_id, food_orders, total_price, start_time, end_time FROM receipts'''
+        cursor.execute(sqlQuery)
         receiptsRows = cursor.fetchall()
         response = jsonify(receiptsRows)
         response.status_code = 200
@@ -176,13 +175,13 @@ def receipts():
         conn.close()
 
 
-@app.route('/receipt/<receipt_id>')
+@app.route('/receipts/<receipt_id>')
 def receipt_details(receipt_id):
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute(
-            "SELECT receipt_id, food_orders, total_price, start_time, end_time FROM tables WHERE id = %s", receipt_id)
+            "SELECT receipt_id, food_orders, total_price, start_time, end_time, table_id FROM receipts WHERE receipt_id = %s", receipt_id)
         receiptRow = cursor.fetchone()
         response = jsonify(receiptRow)
         response.status_code = 200
@@ -195,24 +194,173 @@ def receipt_details(receipt_id):
         conn.close()
 
 
-@app.route('/update/receipt/<receipt_id>', methods=['PUT'])
-def update_receipt():
+@app.route('/update/receipts/<receipt_id>', methods=['PUT'])
+def update_receipt(receipt_id):
+    cursor = None
+    conn = None
     try:
         _json = request.json
-        _receipt_id = _json['receipt_id']
-        _food_orders = _json['food_orders']
-        _total_price = _json['total_price']
-        _start_time = _json['start_time']
-        _end_time = _json['end_time']
-        if _receipt_id and _food_orders and _total_price and _start_time and _end_time and request.method == 'PUT':
-            sqlQuery = "UPDATE receipts SET receipt_id=%s, food_orders=%s, total_price=%s, start_time=%s, end_time=%s WHERE table_id=%s"
-            bindData = (_receipt_id, _food_orders, _total_price,
-                        _start_time, _end_time, _receipt_id)
+        _receipt_id = _json.get('receipt_id')
+        _food_orders = _json.get('food_orders')
+        _total_price = _json.get('total_price')
+        _start_time = _json.get('start_time')
+        _end_time = _json.get('end_time')
+
+        if not any((_receipt_id, _food_orders, _total_price, _start_time, _end_time)):
+            return showMessage()
+
+        set_clause = []
+        bindData = []
+
+        if _receipt_id:
+            set_clause.append('receipt_id=%s')
+            bindData.append(_receipt_id)
+        if _food_orders:
+            set_clause.append('food_orders=%s')
+            bindData.append(_food_orders)
+        if _total_price:
+            set_clause.append('total_price=%s')
+            bindData.append(_total_price)
+        if _start_time:
+            set_clause.append('start_time=%s')
+            bindData.append(_start_time)
+        if _end_time:
+            set_clause.append('end_time=%s')
+            bindData.append(_end_time)
+
+        set_clause = ', '.join(set_clause)
+
+        if request.method == 'PUT':
+            sqlQuery = f"UPDATE receipts SET {set_clause} WHERE receipt_id=%s"
+            bindData.append(receipt_id)
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.execute(sqlQuery, tuple(bindData))
+            conn.commit()
+
+            if cursor.rowcount == 0:
+                return jsonify(f"No receipt with id {receipt_id} found")
+
+            response = jsonify(f"Receipt {receipt_id} updated successfully!")
+            response.status_code = 200
+            return response
+        else:
+            return showMessage()
+    except Exception as e:
+        print(e)
+        return jsonify(e)
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conn is not None:
+            conn.close()
+
+
+@app.route('/delete/receipt/<receipt_id>', methods=['DELETE'])
+def delete_receipt(receipt_id):
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute('''DELETE FROM receipt WHERE receipt_id =%s''',
+                       (receipt_id,))
+        conn.commit()
+        response = jsonify(f'Receipt {receipt_id} deleted successfully!')
+        response.status_code = 200
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# Foods
+
+
+@app.route('/create/food', methods=['POST'])
+def create_food():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    try:
+        _json = request.json
+        _food_id = _json['food_id']
+        _name = _json['name']
+        _price = _json['price']
+        if _food_id and _name and _price and request.method == 'POST':
+            conn = mysql.connect()
+            cursor = conn.cursor(pymysql.cursors.DictCursor)
+            sqlQuery = '''INSERT INTO foods(food_id, name, price) VALUES (%s, %s, %s)'''
+            bindData = (_food_id, _name, _price)
+            cursor.execute(sqlQuery, bindData)
+            conn.commit()
+            response = jsonify('Food added successfully')
+            response.status_code = 200
+            return response
+        else:
+            return showMessage()
+    except Exception as e:
+        print(e)
+        return jsonify('error')
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route("/foods", methods=["GET"])
+def foods():
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(
+            '''SELECT food_id, name, price FROM foods''')
+        foodsRows = cursor.fetchall()
+        response = jsonify(foodsRows)
+        response.status_code = 200
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/foods/<food_id>', methods=['GET'])
+def food_details(food_id):
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(
+            '''SELECT food_id, name, price FROM foods WHERE food_id = %s''', food_id)
+        receiptRow = cursor.fetchone()
+        response = jsonify(receiptRow)
+        response.status_code = 200
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/update/foods/<food_id>', methods=['PUT'])
+def update_food(food_id):
+    try:
+        _json = request.json
+        _food_id = _json['food_id']
+        _name = _json['name']
+        _price = _json['price']
+        if _food_id and _name and _price and request.method == 'PUT':
+            sqlQuery = '''UPDATE foods SET food_id=%s, name=%s, price=%s WHERE food_id=%s'''
+            bindData = (_food_id, _name, _price, food_id)
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute(sqlQuery, bindData)
             conn.commit()
-            response = jsonify(f'Receipt {_receipt_id} updated successfully!')
+            response = jsonify(f'Food {food_id} updated successfully!')
             response.status_code = 200
             return response
         else:
@@ -225,15 +373,15 @@ def update_receipt():
         conn.close()
 
 
-@app.route('/delete/receipt/<receipt_id>', methods=['DELETE'])
-def delete_receipt(receipt_id):
+@app.route('/delete/foods/<food_id>', methods=['DELETE'])
+def delete_food(food_id):
     try:
         conn = mysql.connect()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM receipt WHERE table_id =%s",
-                       (receipt_id,))
+        cursor.execute("DELETE FROM foods WHERE food_id =%s",
+                       (food_id))
         conn.commit()
-        response = jsonify(f'Receipt {receipt_id} deleted successfully!')
+        response = jsonify(f'Food {food_id} deleted successfully!')
         response.status_code = 200
         return response
     except Exception as e:
