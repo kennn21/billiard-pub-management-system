@@ -11,6 +11,7 @@ import DataFetcher from '@/helper/DataFetcher'
 export default function FoodMenu() {
   const [orders, setOrders] = useState<Order[]>([])
   const [table, setTable] = useState<Table>()
+  const [totalPrice, setTotalPrice] = useState<number>(0)
   const [receipt, setReceipt] = useState<any>()
 
   const searchParams = useSearchParams()
@@ -33,8 +34,12 @@ export default function FoodMenu() {
       }
     };
 
-    fetchData();
-  }, [table_id]);
+    fetchData()
+  }, [table_id])
+
+  useEffect(() => {
+    handleSaveOrder()
+  }, [orders])
 
   const handleAddToOrder = (food: Food, quantity: number) => {
     const existingOrder = orders.find((order) => order.food.id === food.id);
@@ -62,11 +67,11 @@ export default function FoodMenu() {
     }
   }
 
-  const handleSaveOrder = async () => {
+  const saveOrder = async (totalPrice: number) => {
     if (receipt) {
       const orderString = orders.map((order) => `${order.food.id}/${order.quantity}`).join(',');
       const dataFetcher = new DataFetcher("http://127.0.0.1:5000");
-      await dataFetcher.updateReceiptById(receipt.receipt_id, orderString);
+      await dataFetcher.updateReceiptById(receipt.receipt_id, orderString, totalPrice);
     } else {
       console.error('Receipt is undefined');
     }
@@ -94,6 +99,15 @@ const navigateToTable = () => {
   router.push('/table?id='+table_id)
 };
 
+const handleSaveOrder = () => {
+  const totalPrice = orders.reduce((total, order) => {
+    return total + order.food.price * order.quantity
+  }, 0);
+  setTotalPrice(totalPrice)
+  saveOrder(totalPrice)
+}
+
+
   return (
     <div>
       <h2>Food Menu</h2>
@@ -116,8 +130,8 @@ const navigateToTable = () => {
           </li>
         ))}
       </ul>
-      <button className="btn-primary" onClick={()=>handleSaveOrder()}>Save Order</button>
-      <button className="btn-primary" onClick={()=>navigateToTable()}>Back</button>
+      <h4>Total Price: {totalPrice}</h4>
+      <button className="btn btn-primary" onClick={()=>navigateToTable()}>Back</button>
     </div>
   );
 }  

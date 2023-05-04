@@ -54,10 +54,11 @@ class DataFetcher {
     }
   }
 
-  public async updateReceiptById(receipt_id: string, updatedOrders: string): Promise<string | undefined> {
+  public async updateReceiptById(receipt_id: string, updatedOrders: string, total_price: number): Promise<string | undefined> {
     try {
       const receipt: any = {
-        "food_orders": updatedOrders
+        "food_orders": updatedOrders,
+        "total_price": total_price
     }
       const response: AxiosResponse = await axios.put(`${this.apiUrl}/update/receipts/${receipt_id}`, receipt)
 
