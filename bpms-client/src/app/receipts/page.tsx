@@ -55,7 +55,7 @@ export default function ReceiptsPage(){
                             <p className="card-text">{receipt.start_time}</p>
                             <p className="card-text">{receipt.end_time}</p>
                             <p className="card-text">{receipt.table_id}</p>
-                            <p className="card-text">{receipt.total_price}</p>
+                            <p className="card-text">{Converters.convertPrice(receipt.total_price)}</p>
                             <GoToReceipt receipt_id={receipt.receipt_id} />
                         </div>
                     </div>

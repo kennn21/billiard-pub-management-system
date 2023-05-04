@@ -41,6 +41,7 @@ export default function ReceiptInfo(){
                 <p className="card-text">{Converters.convertOrderedFood(receipt.food_orders)}</p>
                 <p className="card-text">Table served at: {receipt.start_time}</p>
                 <p className="card-text">Table left at: {receipt.end_time}</p>
+                <p className="card-text">{Converters.convertPrice(receipt.total_price)}</p>
                 <p className="card-text">{receipt.table_id}</p>
     
                 <button className="btn-primary" onClick={navigateToReceipts}>

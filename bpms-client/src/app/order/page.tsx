@@ -1,12 +1,21 @@
 "use client"
+
+//Library Imports
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { menu } from './menu';
 import '../globals.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Food, Order, Table, Receipt } from '../../interface/interface'
 import { useSearchParams } from 'next/navigation'
-import DataFetcher from '@/helper/DataFetcher'
+
+//User Defined Imports
+  //Classes
+    import Converters from '../../utils/Converters'
+    import DataFetcher from '@/helper/DataFetcher'
+    
+  //Modules
+    import { menu } from './menu';
+    import { Food, Order, Table, Receipt } from '../../interface/interface'
+
 
 export default function FoodMenu() {
   const [orders, setOrders] = useState<Order[]>([])
@@ -130,7 +139,7 @@ const handleSaveOrder = () => {
           </li>
         ))}
       </ul>
-      <h4>Total Price: {totalPrice}</h4>
+      <h4>Total Price: {Converters.convertPrice(totalPrice)}</h4>
       <button className="btn btn-primary" onClick={()=>navigateToTable()}>Back</button>
     </div>
   );
