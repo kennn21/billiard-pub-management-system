@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 
 
 
-export default function ReceiptsPage(){
+export default function ReceiptsLog(){
 
   const [receipts, setReceipts] = useState<Receipt[]>([])
 

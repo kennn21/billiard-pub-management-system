@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 
-export default function TableManagement() {
+export default function TableManager() {
   const [table, SetTable] = useState<Table>();
 
   const router = useRouter();

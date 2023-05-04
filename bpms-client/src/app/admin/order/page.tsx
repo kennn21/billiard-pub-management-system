@@ -15,7 +15,7 @@ import { useSearchParams } from 'next/navigation'
     import { Food, Order, Table} from '../../../interface/interface'
 
 
-export default function OrderFood() {
+export default function OrderManager() {
   const [orders, setOrders] = useState<Order[]>([])
   const [table, setTable] = useState<Table>()
   const [totalPrice, setTotalPrice] = useState<number>(0)
