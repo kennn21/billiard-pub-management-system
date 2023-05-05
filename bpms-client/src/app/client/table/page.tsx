@@ -67,8 +67,12 @@ export default function TableBooking() {
   if (table) {
     return (
       <>
+      <br/>
+      <br/>
+      <div className=" text-center">
         <h1>{table.name}</h1>
         <h3>Table Status: {Converters.convertStatus(table.status)}</h3>
+        <br/>
         {table.status === "1" && (
           <button className="btn btn-primary" onClick={orderTable}>
             Order Table
@@ -84,9 +88,11 @@ export default function TableBooking() {
             </button>
           </>
         )}
-        <button className="btn btn-primary" onClick={navigateToMain}>
+        <button className="btn btn-danger" onClick={navigateToMain}>
           Back
         </button>
+
+        </div>
 
 
       </>

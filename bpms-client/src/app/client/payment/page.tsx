@@ -17,7 +17,7 @@ export default function PaymentInterface(){
     
     return(
         <>
-            <h1>Payment for {table_id}</h1>
+            <h1 >Payment for {table_id}</h1>
             <div className="row">
                 <div className="col-md-4">
                     <img src={config.payment_image_url_gopay}/>
@@ -30,6 +30,7 @@ export default function PaymentInterface(){
                 </div>
             </div>
             <button className="btn btn-primary" onClick={navigateToMain}>Back</button>
+            
         </>
     )
 }

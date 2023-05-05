@@ -42,7 +42,7 @@ export default function Home() {
       router.push('/admin/table?id='+table_id)
     }
     return (
-      <a href="#" className="btn btn-primary" onClick={handleClick}>Admin</a>
+      <a href="#" className="btn btn-danger" onClick={handleClick}>Admin</a>
     )
   }
 
@@ -51,26 +51,42 @@ export default function Home() {
       router.push('/admin/receipts')
     }
     return(
-      <a href="#" className="btn btn-primary" onClick={handleClick}>Receipts Page</a>
+      <a href="#" className="" onClick={handleClick}>-Receipts Page-</a>
     )
   }
   
 
   return (
     <main>
-      <div className='row'>
+      <div className="row justify-content-center">
+        <div className="col-xl-7 col-lg-9 text-center">
+        <br/>
+          <h1>Welcome to Shelby Billiard</h1>
+          <h2>Play Play Play</h2>
+        </div>
+      </div>
+      <div className="text-center">
+      <GoToReceipts/>
+      </div>
+      <div className='col-sm-4' ><p></p></div>
+      <div className='row text-center'>
       {tables.map((table) => (
-        <div className='col-sm-4' key={table.table_id}>
-          <img className='card-img-top' src={config.table_image_url}/>
-          <div className="card-body">
-            <h5 className="card-title">{table.name}</h5>
-            <p className="card-text">Status: {Converters.convertStatus(table.status)}</p>
-            <GoToTableAsClient table_id={table.table_id} />
+        <div className='col-sm-4 C' key={table.table_id}>
+          <div className="col-md-10 col-lg-12">
+          <div className="icon-box text-center">
+            <br/>
+            <br/>
+            
+            <h5 className="card-title text-center">{table.name}</h5>
+            <img className='card-img-top' src={config.table_image_url}/>
+            <p className="card-text center">Status: {Converters.convertStatus(table.status)}</p>
+            <GoToTableAsClient table_id={table.table_id} />&nbsp;&nbsp;&nbsp;
             <GoToTableAsAdmin table_id={table.table_id} />
           </div>
         </div>
+        </div>
+
       ))}
-      <GoToReceipts/>
       </div>
     </main>
   )
