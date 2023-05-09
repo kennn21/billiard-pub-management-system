@@ -57,7 +57,7 @@ export const menu: Food[] = [
       },
       {
         id: 10,
-        name: 'Andrew Tate',
+        name: 'Top.G Egg',
         info: 'Top G Egg',
         price: 2000
       },

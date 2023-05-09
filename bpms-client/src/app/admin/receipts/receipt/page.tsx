@@ -4,6 +4,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import '@/app/static/style/card.css'
+import 'bootstrap/dist/css/bootstrap.css'
 
 //User Defined Dependencies
   //Services (Class)
@@ -12,6 +14,7 @@ import { useEffect, useState } from 'react'
   //Modules
     import { Receipt, Order } from '../../../../interface/interface'
     import { menu } from '@/app/static/menu'
+    import { config } from '@/app/static/config';
 
 export default function ReceiptInfo(){
   const [receipt, setReceipt] = useState<Receipt>()
@@ -57,10 +60,13 @@ export default function ReceiptInfo(){
       }
 
       if(receipt){
-        //load Order
 
+        //load Order
         return(
             <>
+              <div className='card col-lg-4' key={receipt.receipt_id}>
+                <img className='card-img-top' src={config.receipt_image_url}/>
+                <div className="card-body">
                 <h4 className='card-title'>{Converters.convertReceiptId(receipt.receipt_id)}</h4>
                 <p className="card-text">{receipt.receipt_id}</p>
 
@@ -78,10 +84,13 @@ export default function ReceiptInfo(){
                 <p className="card-text"><b>Table left at:</b> {receipt.end_time}</p>
                 <p className="card-text"><b>Total Price: </b>{Converters.convertPrice(receipt.total_price)}</p>
                 <p className="card-text"><b>Table: </b>{receipt.table_id}</p>
-    
-                <button className="btn-primary" onClick={navigateToReceipts}>
+  
+                </div>
+              </div>
+              <button className="btn btn-primary mx-auto" onClick={navigateToReceipts}>
                 Go Back
-                </button>
+              </button>
+
             </>
           )
       }

@@ -13,6 +13,8 @@ import { useRouter } from 'next/navigation'
     import Converters from '../../../utils/Converters'
     import DataFetcher from '@/helper/DataFetcher'
 
+  //Styles
+    import '@/app/static/style/card.css'
 
 
 export default function ReceiptsLog(){
@@ -52,7 +54,7 @@ export default function ReceiptsLog(){
             <main>
                 <div className='row'>
                 {receipts.map((receipt) => (
-                    <div className='col-lg-4' key={receipt.receipt_id}>
+                    <div className='card col-lg-4' key={receipt.receipt_id}>
                         <img className='card-img-top' src={config.receipt_image_url}/>
                         <div className="card-body">
                             <h4 className='card-title'>{Converters.convertReceiptId(receipt.receipt_id)}</h4>
