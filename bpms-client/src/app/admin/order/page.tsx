@@ -5,14 +5,22 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation'
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 //User Defined Imports
   //Services (Class)
     import Converters from '../../../utils/Converters'
     import DataFetcher from '@/helper/DataFetcher'
     
   //Modules
+    import { menu_img } from '@/app/static/menu_images';
     import { menu } from '../../static/menu';
     import { Food, Order, Table} from '../../../interface/interface'
+
+  //style
+  import '@/app/static/style/card.css'
 
 
 export default function OrderManager() {
@@ -123,29 +131,47 @@ const handleSaveOrder = () => {
 //endregion
 
   return (
-    <div>
-      <h2>Food Menu</h2>
-      <ul>
-        {menu.map((food) => (
-          <li key={food.id}>
-            <span>{food.name}</span>
-            <span> | {Converters.convertPrice(food.price.toFixed(2))}</span>
-            <button onClick={() => handleRemoveFromOrder(food, 1)}>-</button>
-            <button onClick={() => handleAddToOrder(food, 1)}>+</button>
-          </li>
-        ))}
-      </ul>
-      <h2>Orders</h2>
-      <ul>
-        {orders.map((order, index) => (
-          <li key={index}>
-            <span>{order.food.name}</span>
-            <span> x {order.quantity}</span>
-          </li>
-        ))}
-      </ul>
-      <h4>Total Price: {Converters.convertPrice(totalPrice)}</h4>
-      <button className="btn btn-primary" onClick={()=>navigateToTable()}>Back</button>
+    <div className="container">
+  <div className="row justify-content-center mb-4">
+    <div className="col-md-8 text-center">
+      <h2 className="mb-4">Food Menu</h2>
+      <ToastContainer />
     </div>
+  </div>
+  <div className='row'>
+    {menu.map((food, index) => (
+      <div className='col-md-3 mb-4' key={food.id}>
+        <div className='card mx-auto'>
+          <img className='card-img-top' src={menu_img[index].img}/>
+          <div className='card-body'>
+            <h5 className='card-title'>{food.name}</h5>
+            <p className='card-text'>{Converters.convertPrice(food.price.toFixed(2))}</p>
+            <div className="d-flex justify-content-center">
+              <button className="btn btn-danger me-3" onClick={() => handleRemoveFromOrder(food, 1)}>-</button>
+              <button className="btn btn-primary" onClick={() => handleAddToOrder(food, 1)}>+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+  <div className="row justify-content-center mt-4">
+    <div className="col-md-8 text-center">
+      <h2>Orders</h2>
+      <ul className="list-group">
+        {orders.map((order, index) => (
+          <li className="list-group-item d-flex justify-content-between align-items-center" key={index}>
+            <span>{order.food.name}</span>
+            <span className="badge bg-primary rounded-pill">x {order.quantity}</span>
+          </li>
+        ))}
+      </ul>
+      <h4 className="mt-4 mb-0 fw-bold">
+        Total Price: {Converters.convertPrice(totalPrice)}
+      </h4>
+      <button className="btn btn-primary mt-4" onClick={()=>navigateToTable()}>Back</button>
+    </div>
+  </div>
+</div>
   );
 }  

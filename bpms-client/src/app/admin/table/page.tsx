@@ -7,6 +7,8 @@ import Converters from '../../../utils/Converters'
 import { Table, Receipt, Food } from '../../../interface/interface'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { config } from '@/app/static/config';
+
 
 
 export default function TableManager() {
@@ -62,28 +64,34 @@ export default function TableManager() {
   if (table) {
     return (
       <>
+      <div className='text-center'>
         <h1>{table.name}</h1>
+        <div className="text-center">
+            <img className="card-img-top" style={{width: "36rem"}} src={config.table_image_url}/>
+        </div>
         <h3>Table Status: {Converters.convertStatus(table.status)}</h3>
         {table.status === "1" && (
+          <>
           <button className="btn btn-primary" onClick={orderTable}>
             Reserve table
-          </button>
+          </button>&nbsp;
+          </>
         )}
         {table.status === "0" && (
           <>
-            <button className="btn btn-primary" onClick={finishTable}>
+            <button className="btn btn-success" onClick={finishTable}>
               Finish Table
-            </button>
+            </button> &nbsp;
             <button className="btn btn-primary" onClick={navigateToOrderPage}>
               Food orders
-            </button>
+            </button> &nbsp;
           </>
         )}
-        <button className="btn btn-primary" onClick={navigateToMain}>
+        <button className="btn btn-danger" onClick={navigateToMain}>
           Back
         </button>
 
-
+        </div>
       </>
     );
   } else {

@@ -52,10 +52,19 @@ export default function ReceiptsLog(){
     return(
         <>
             <main>
-                <div className='row'>
+            <div className="row justify-content-center">
+              <div className="col-xl-7 col-lg-9 text-center">
+              <br/>
+                <h1>Receipt Page</h1>
+                <button className="btn btn-primary" onClick={()=>navigateToMain()}>Main Page</button>
+                <br/><br/>
+              </div>
+            </div>
+            <div className='row text-center '>
+                <div className='row justify-content-center'>
                 {receipts.map((receipt) => (
-                    <div className='card col-lg-4' key={receipt.receipt_id}>
-                        <img className='card-img-top' src={config.receipt_image_url}/>
+                    <div className='card col-md-3 mb-4 text-center mx-3 ' key={receipt.receipt_id}>
+                        <img className='card-img-top pt-3' src={config.receipt_image_url}/>
                         <div className="card-body">
                             <h4 className='card-title'>{Converters.convertReceiptId(receipt.receipt_id)}</h4>
                             <p className="card-text">{receipt.food_orders}</p>
@@ -67,7 +76,7 @@ export default function ReceiptsLog(){
                         </div>
                     </div>
                 ))}
-                <button className="btn btn-primary" onClick={()=>navigateToMain()}>Main Page</button>
+                </div>
                 </div>
             </main>
         </>

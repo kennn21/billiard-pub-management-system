@@ -78,7 +78,7 @@ export default function Home() {
             <br/>
             
             <h5 className="card-title text-center">{table.name}</h5>
-            <img className='card-img-top' src={config.table_image_url}/>
+            <img className="card-img-top"src={config.table_image_url}/>
             <p className="card-text center">Status: {Converters.convertStatus(table.status)}</p>
             <GoToTableAsClient table_id={table.table_id} />&nbsp;&nbsp;&nbsp;
             <GoToTableAsAdmin table_id={table.table_id} />
