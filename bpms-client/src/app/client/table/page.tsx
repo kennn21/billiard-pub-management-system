@@ -35,6 +35,7 @@ export default function TableBooking() {
   };
 
   const orderTable = async () => {
+    console.log("Ordering table...")
     const dataFetcher = new DataFetcher("http://127.0.0.1:5000");
     if (table) {
       const res = await dataFetcher.setTableToReserved(table_id);
@@ -43,7 +44,11 @@ export default function TableBooking() {
         ...table,
         status: "0",
       });
+
+    console.log("Table ordered")
+
     }
+    
   };
 
   const finishTable = async () => {
